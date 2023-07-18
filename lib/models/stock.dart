@@ -1,7 +1,7 @@
 class Stock {
-  final String symbol;
-  final String company;
-  final double price;
+  String symbol;
+  String company;
+  double price;
 
   Stock({required this.symbol, required this.company, required this.price});
 

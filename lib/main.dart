@@ -12,6 +12,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: "Stocks",
       home: MyHomePage(),
     );
@@ -78,5 +79,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
-
