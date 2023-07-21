@@ -1,11 +1,10 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
+import 'package:url_launcher/url_launcher.dart';
 
 class NewsFeedScreen extends StatefulWidget {
-  const NewsFeedScreen();
+  const NewsFeedScreen({Key? key}) : super(key: key);
 
   @override
   _NewsFeedScreenState createState() => _NewsFeedScreenState();
@@ -45,21 +44,40 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('News Feed'),
+        title: const Text('News Feed'),
       ),
-      body: ListView.builder(
-        itemCount: _newsItems.length,
-        itemBuilder: (context, index) {
-          final item = _newsItems[index];
-          return ListTile(
-            title: Text(item['title'] ?? ''),
-            subtitle: Text(item['pubDate'] ?? ''),
-            onTap: () {
-              // Handle item tap
-            },
-          );
-        },
-      ),
+      body: NewsList(newsItems: _newsItems),
     );
+  }
+}
+
+class NewsList extends StatelessWidget {
+  final List<Map<String, String>> newsItems;
+
+  const NewsList({required this.newsItems});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: newsItems.length,
+      itemBuilder: (context, index) {
+        final item = newsItems[index];
+        return ListTile(
+          title: Text(item['title'] ?? ''),
+          subtitle: Text(item['pubDate'] ?? ''),
+          onTap: () {
+            _launchURL(item['link'] ?? '');
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      print('Could not launch $url');
+    }
   }
 }
